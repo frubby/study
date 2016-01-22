@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+
+	<!-- 扫描类包，将标注Spring注解的类自动转化Bean，同时完成Bean的注入 -->
+	<context:component-scan base-package="com.frw.dev.tmp" />
+	<context:component-scan base-package="com.frw.dev.tmp.event" />
+	<context:annotation-config />
+
+	<bean id="appListerner" class="com.frw.dev.tmp.event.AppListerner" />
+
+	<bean id="infoMessageService" class="com.frw.dev.tmp.InfoMessageService"
+		init-method="init" destroy-method="destroy">
+		<property name="id" value="11"></property>
+		<property name="tag" value="info"></property>
+	</bean>
+	<bean id="debugMessageService" class="com.frw.dev.tmp.DebugMessageService"
+		init-method="init">
+	</bean>
+	<bean id="errorMessageService" class="com.frw.dev.tmp.ErrorMessageService"
+		init-method="init">
+	</bean>
+	<bean id="warnMessageService" class="com.frw.dev.tmp.WarnMessageService"
+		init-method="init">
+	</bean>
+
+	<!--<bean id="customPublisher" class="com.frw.dev.tmp.event.CustomEventPublisher" />-->
+	<!--<bean id="customListener" class="com.frw.dev.tmp.event.CustomListener" />-->
+	<!-- <bean id="messagePrinter" class="com.frw.dev.tmp.MessagePrinter"> -->
+	<!-- <property name="infoMessageService" ref="infoMessageService"></property> -->
+	<!-- </bean> -->
+
+
+</beans>
