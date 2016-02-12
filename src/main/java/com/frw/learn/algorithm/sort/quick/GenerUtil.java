@@ -8,7 +8,7 @@ public class GenerUtil {
 		int []arr=new int[num];
 		Random rd=new Random();
 		for(int i=0;i<num;i++){
-			arr[i]=rd.nextInt(100000);
+			arr[i]=rd.nextInt(10000000);
 		}
 		return arr;
 	}

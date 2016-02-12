@@ -30,7 +30,7 @@ public class QuickSort {
 	}
 
 	public static void main(String[] args){
-		int arr[]=GenerUtil.genIntArr(10000000);
+		int arr[]=GenerUtil.genIntArr(100000000);
 		long start,end;
 		start =System.currentTimeMillis();
 		QuickSort.sort(arr, 0, arr.length-1);
