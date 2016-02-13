@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class MultiQuickSort {
-	public static final int thread_num=20;
+	public static final int thread_num=10;
 	private ThreadPoolExecutor exes;
 	private BlockingQueue<Runnable> que;
 	private int[] arr;
@@ -79,7 +79,7 @@ public class MultiQuickSort {
 
 
 	public static void main(String[] args){
-		int arr[]=GenerUtil.genIntArr(20000000);
+		int arr[]=GenerUtil.genIntArr(100000000);
 		long start,end;
 		MultiQuickSort msort=new MultiQuickSort(arr);
 		start =System.currentTimeMillis();
