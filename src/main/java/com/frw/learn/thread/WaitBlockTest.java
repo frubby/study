@@ -80,15 +80,30 @@ public class WaitBlockTest {
 				}
 			}
 			simulate();
+			//			try {
+			//				this.sleep(20000);
+			//			} catch (InterruptedException e) {
+			//				// TODO Auto-generated catch block
+			//				e.printStackTrace();
+			//			}
+			//			}
 			System.out.println("thread A finish    "+Thread.currentThread().getName());
 			//		lock.notify();
 			//	}
+			while (true){
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 	}	
 
 	public void testWait(){
 
-		for(int i=0;i<5;i++){
+		for(int i=0;i<2;i++){
 			new MyThreadWait().start();
 		}
 		try {
@@ -111,6 +126,16 @@ public class WaitBlockTest {
 	public static void main(String args[]) {
 		WaitBlockTest test=new WaitBlockTest();
 		test.testWait();
+
+
+		while (true){
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 
 	}
 
