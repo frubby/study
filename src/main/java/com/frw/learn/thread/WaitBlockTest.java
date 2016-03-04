@@ -123,9 +123,20 @@ public class WaitBlockTest {
 		thB.start();
 	}
 
+
+
+	public void testIOwait(){
+		new Thread(){
+			public void run(){
+				
+			}
+		}.start(); 
+
+
+	}
 	public static void main(String args[]) {
 		WaitBlockTest test=new WaitBlockTest();
-		test.testWait();
+		test.testIOwait();
 
 
 		while (true){

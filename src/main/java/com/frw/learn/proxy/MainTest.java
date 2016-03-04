@@ -9,6 +9,7 @@ public class MainTest {
 		Subject ProxySub=(Subject)Proxy.newProxyInstance(Subject.class.getClassLoader(), 
 				  new Class[]{Subject.class}, new ProxyHandler(relsub));
 		ProxySub.doSomething();
+		
 	}
 	
 

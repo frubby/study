@@ -10,21 +10,28 @@ public class ThreadException {
 			int i=0;
 			int j=1;
 			int c=j/i;
+//			try {
+//				Thread.sleep(10000);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//				Thread.currentThread().interrupt();
+//			}
 		}
 	}
 	
 	
 	public void test(){
 		Mythread th=new Mythread();
-//		th.setUncaughtExceptionHandler(new UncaughtExceptionHandler(){
-//
-//			public void uncaughtException(Thread t, Throwable e) { 
-//				System.out.println(t.getName());
-//				e.printStackTrace();
-//			}
-//			
-//		});
+		th.setUncaughtExceptionHandler(new UncaughtExceptionHandler(){
+
+			public void uncaughtException(Thread t, Throwable e) { 
+				System.out.println(t.getName());
+				e.printStackTrace();
+			}
+			
+		});
 		th.start();
+//		th.interrupt();
 	}
 	
 	
