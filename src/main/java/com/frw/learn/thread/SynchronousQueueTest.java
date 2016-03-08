@@ -20,13 +20,13 @@ public class SynchronousQueueTest {
 		}.start();
 	}
 	
-	static void  testTake(){	
+	static void  testTake(final int mark){	
 		new Thread(){
 			public void run(){
 				try {
-					System.out.println("start get");
+					System.out.println("start get"+ " "+mark);
 					String str=(String) sq.take();
-					System.out.println("get : "+ str);
+					System.out.println("get : "+ str+ " "+mark);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -54,7 +54,7 @@ public class SynchronousQueueTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		testTake();
+		testTake(0);
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
@@ -62,8 +62,8 @@ public class SynchronousQueueTest {
 			e.printStackTrace();
 		}
 		System.out.println("step 2");
-		testTake();
-		
+		testTake(1);
+		testTake(2);
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
