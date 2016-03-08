@@ -50,6 +50,7 @@ public class MyLock {
 	public void unLock(){
 		
 		sync.release(1)  ;  
+		
 	}
 	
 	public   static void main(String args[]){
