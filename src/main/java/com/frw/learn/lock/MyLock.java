@@ -48,7 +48,8 @@ public class MyLock {
 		sync.acquire(1);
 	}
 	public void unLock(){
-		sync.release(1);
+		
+		sync.release(1)  ;  
 	}
 	
 	public   static void main(String args[]){
