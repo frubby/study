@@ -42,6 +42,10 @@ public class Test {
 		ArrayList<Integer> s=new ArrayList<Integer>(){
 			
 		};
+		
+//		WeakHashMap;
+		
+		
 	
 	}
 }

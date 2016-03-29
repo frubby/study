@@ -18,7 +18,6 @@ public class BIOServer {
 		public HandleMsg(Socket clientSocket){
 			this.clientSocket=clientSocket;
 		}
-		@Override
 		public void run() {
 			BufferedReader is=null;
 			PrintWriter os=null;
