@@ -1,15 +1,10 @@
 package com.frw.dev.mq;
 
+import com.rabbitmq.client.*;
+
 import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.TimeoutException;
-
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.ConsumerCancelledException;
-import com.rabbitmq.client.QueueingConsumer;
-import com.rabbitmq.client.ShutdownSignalException;
 
 public class FanoutRecv {
 	private final static String EXCHANGE_NAME = "ex_log";  

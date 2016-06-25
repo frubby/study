@@ -2,7 +2,6 @@ package com.frw.dev.app;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;

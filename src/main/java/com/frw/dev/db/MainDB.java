@@ -1,17 +1,16 @@
 package com.frw.dev.db;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
+import com.frw.dev.db.bean.UserBean;
+import com.frw.dev.db.mapper.UserMapper;
+import com.google.gson.Gson;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-import com.frw.dev.db.bean.UserBean;
-import com.frw.dev.db.mapper.UserMapper;
-import com.google.gson.Gson;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 public class MainDB {
 	public static void main(String[] args) {

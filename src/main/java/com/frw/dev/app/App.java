@@ -1,12 +1,10 @@
 package com.frw.dev.app;
 
-import org.springframework.context.ApplicationContext;
+import com.frw.dev.tmp.MessagePrinter;
+import com.frw.dev.tmp.event.CustomEventPublisher;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import com.frw.dev.tmp.MessagePrinter;
-import com.frw.dev.tmp.event.CustomEventPublisher; 
 
 /**
  * Hello world!

@@ -1,13 +1,12 @@
 package com.frw.dev.app;
 
+import com.frw.dev.tmp.MessagePrinter;
+import com.frw.dev.tmp.MessageService;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
-
-import com.frw.dev.tmp.MessagePrinter;
-import com.frw.dev.tmp.MessageService;
 
 public class AppFactory {
 

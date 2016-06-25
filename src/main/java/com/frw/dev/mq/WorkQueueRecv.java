@@ -1,13 +1,13 @@
 package com.frw.dev.mq;
 
-import java.io.IOException;
-import java.util.Random;
-import java.util.concurrent.TimeoutException;
-
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.QueueingConsumer;
+
+import java.io.IOException;
+import java.util.Random;
+import java.util.concurrent.TimeoutException;
 
 public class WorkQueueRecv {
 	private final static String QUEUE_NAME = "workqueue";
