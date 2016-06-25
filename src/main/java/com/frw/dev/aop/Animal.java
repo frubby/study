@@ -1,5 +1,7 @@
 package com.frw.dev.aop;
 
+import java.sql.SQLException;
+
 public interface Animal {
 
 	public void run();

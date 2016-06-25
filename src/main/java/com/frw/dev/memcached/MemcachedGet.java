@@ -1,9 +1,9 @@
 package com.frw.dev.memcached;
 
-import net.spy.memcached.MemcachedClient;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
+
+import net.spy.memcached.MemcachedClient;
 
 public class MemcachedGet {
 	public static void main(String[] args) {

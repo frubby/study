@@ -1,8 +1,8 @@
 package com.frw.dev.db.mapper;
 
-import com.frw.dev.db.bean.UserBean;
-
 import java.util.List;
+
+import com.frw.dev.db.bean.UserBean;
 
 public interface UserMapper {
 

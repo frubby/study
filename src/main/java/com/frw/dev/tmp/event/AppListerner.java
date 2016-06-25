@@ -4,6 +4,7 @@ package com.frw.dev.tmp.event;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextStartedEvent;
+import org.springframework.stereotype.Component;
 
 
 public class AppListerner implements ApplicationListener<ContextStartedEvent> {

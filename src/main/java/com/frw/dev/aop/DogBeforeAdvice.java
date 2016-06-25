@@ -1,5 +1,8 @@
 package com.frw.dev.aop;
 
+import java.lang.reflect.Method;
+import java.sql.SQLException;
+
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.log4j.Logger;
@@ -7,9 +10,6 @@ import org.springframework.aop.AfterReturningAdvice;
 import org.springframework.aop.MethodBeforeAdvice;
 import org.springframework.aop.ThrowsAdvice;
 import org.springframework.stereotype.Component;
-
-import java.lang.reflect.Method;
-import java.sql.SQLException;
 
 @Component
 public class DogBeforeAdvice implements MethodBeforeAdvice, AfterReturningAdvice ,ThrowsAdvice,MethodInterceptor{
