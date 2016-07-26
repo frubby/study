@@ -95,5 +95,13 @@
 			<version>3.6.1</version>
 		</dependency>
 
+
+		<dependency>
+			<groupId>com.alibaba.otter</groupId>
+			<artifactId>canal.client</artifactId>
+			<version>1.0.20</version>
+		</dependency>
+
+
 	</dependencies>
 </project>
