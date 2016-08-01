@@ -19,7 +19,6 @@ public class ElasticsSearchTest {
 
         TransportClient.Builder build = TransportClient.builder();
 
-        client.a
 
 
     }
