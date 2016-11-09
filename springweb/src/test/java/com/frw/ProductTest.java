@@ -21,7 +21,7 @@ public class ProductTest {
     @Autowired
     ProductCtrl productCtrl;
 
-    @Test
+//    @Test
     public void test() {
         ProductDo productDo = new ProductDo();
         productDo.setName("frw");
