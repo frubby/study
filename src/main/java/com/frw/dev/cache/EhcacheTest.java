@@ -27,4 +27,8 @@ public class EhcacheTest {
 		System.out.println("cache : "+mycache.get(1));
 		
 	}
+
+
+
+
 }
