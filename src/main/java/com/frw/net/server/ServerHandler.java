@@ -2,6 +2,8 @@ package com.frw.net.server;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by fruwei on 2016/11/9.
@@ -17,29 +19,38 @@ public class ServerHandler implements Runnable {
 
     public void run() {
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter out = new PrintWriter(socket.getOutputStream());
+            DataInputStream input = new DataInputStream(socket.getInputStream());
+//            String clientInputStr = input.readUTF();//这里要注意和客户端输出流的写方法对应,否则会抛 EOFException
 
-            while (true) {
+//            System.out.println("reveive :" + clientInputStr);
 
-                String str = in.readLine();
 
-                System.out.println(str);
+            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 
-                out.println("has receive.");
+            out.writeUTF("now: ");
 
-                out.flush();
-
-                if (str.equals("end"))
-
-                    break;
-
+            out.writeUTF("server time : " + new Date());
+            out.flush();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-
-            socket.close();
-
+            out.writeUTF("finish");
+            out.flush();
+            out.close();
+            input.close();
         } catch (IOException e1) {
             e1.printStackTrace();
+        } finally {
+            if (socket != null) {
+                try {
+                    socket.close();
+                } catch (Exception e) {
+                    socket = null;
+                    System.out.println("exception : " + e.getMessage());
+                }
+            }
         }
     }
 }

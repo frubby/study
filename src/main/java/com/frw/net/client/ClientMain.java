@@ -17,19 +17,23 @@ public class ClientMain {
                 socket = new Socket("127.0.0.1", 1234);
                 DataInputStream input = new DataInputStream(socket.getInputStream());
                 DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-                System.out.print("enter: \t");
-                String str = new BufferedReader(new InputStreamReader(System.in)).readLine();
-                out.writeUTF(str);
+//                System.out.print("enter: \t");
+//                String str = new BufferedReader(new InputStreamReader(System.in)).readLine();
+//                out.writeUTF(str);
 
-                String ret = input.readUTF();
-                System.out.println("ret: " + ret);
-                if ("OK".equals(ret)) {
-                    System.out.println("close client");
-                    Thread.sleep(500);
-                    break;
+                out.flush();
+                while (true) {
+                    String ret = input.readUTF();
+                    System.out.println("result: " + ret);
+                    if ("finish".equals(ret)) {
+                        System.out.println("close client");
+                        Thread.sleep(500);
+                        break;
+                    }
                 }
 
-                out.close();
+
+//                out.close();
                 input.close();
 
 
