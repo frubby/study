@@ -54,7 +54,7 @@ public class ServerRealDataHandler implements Runnable {
 
         generateData(data);
 
-        System.out.println(JSON.toJSONString(data,true));
+        System.out.println(JSON.toJSONString(data, true));
 
         char[] chars = new char[4096];
 
@@ -116,10 +116,12 @@ public class ServerRealDataHandler implements Runnable {
         }
 
 
+        System.out.println("\npos size : " + pos);
         for (int i = 10; i < 26 * num; i++) {
-            System.out.print(" " + Integer.toHexString((int) chars[i]));
-            if ((i-10) % 26 == 1)
+            if ((i - 10) % 26 == 0)
                 System.out.println("");
+            System.out.print(" " + Integer.toHexString((int) chars[i]));
+
         }
 
 
@@ -138,12 +140,11 @@ public class ServerRealDataHandler implements Runnable {
 
         int n = 0;
         char[] chs = new char[len];
-        long mark;
+        long mark = 0x00FF;
 
         for (n = 0; n < len; n++) {
-            mark = 0x00FF << (8 * (len - n - 1));
-            chs[n] = (char) (val & mark >> (8 * (len - 1)));
-            System.out.print(" "+Integer.toHexString((int) chs[n]));
+            chs[n] = (char) (val >> (8 * n) & mark);
+            System.out.print(" " + Integer.toHexString((int) chs[n]));
 //            System.out.print(" "+Integer.toHexString((int) mark));
 
         }
