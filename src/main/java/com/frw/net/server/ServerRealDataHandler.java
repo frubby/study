@@ -5,7 +5,9 @@ import com.alibaba.fastjson.JSON;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
@@ -49,15 +51,11 @@ public class ServerRealDataHandler implements Runnable {
     }
 
 
-    public static void main(String args[]) {
+    public int createData(byte[] chars) {
         Data data = JSON.parseObject(strData, Data.class);
 
+
         generateData(data);
-
-        System.out.println(JSON.toJSONString(data, true));
-
-        char[] chars = new char[4096];
-
         int pos = 0;
         chars[pos++] = 0x68;
         chars[pos++] = 0x01;
@@ -67,11 +65,11 @@ public class ServerRealDataHandler implements Runnable {
         chars[pos++] = 0x00;
         chars[pos++] = 0x00;
         chars[pos++] = 0x68;
-        chars[pos++] = 0x81;
+        chars[pos++] = (byte) 0x81;
         int num = 1 + data.num;
-        chars[pos++] = (char) (26 * num); //length
+        chars[pos++] = (byte) (26 * num); //length
 
-        char temp[] = writeLongData(data.address, 6);
+        byte temp[] = writeLongData(data.address, 6);
         System.arraycopy(temp, 0, chars, pos, 6);
         pos += 6;
 
@@ -116,6 +114,101 @@ public class ServerRealDataHandler implements Runnable {
         }
 
 
+        int sum = 0;
+        for (int j = 0; j < pos; j++) {
+            sum += chars[j];
+        }
+        chars[pos++] = (byte) (sum & 0xFF);
+
+        chars[pos++] = 0x16;
+
+        System.out.println("\npos size : " + pos);
+        for (int i = 10; i < 26 * num; i++) {
+            if ((i - 10) % 26 == 0)
+                System.out.println("");
+            System.out.print(" " + Integer.toHexString((int) chars[i]));
+
+        }
+
+
+        return pos;
+    }
+
+
+    public static void main(String args[]) {
+        Data data = JSON.parseObject(strData, Data.class);
+
+        generateData(data);
+
+        System.out.println(JSON.toJSONString(data, true));
+
+        char[] chars = new char[4096];
+
+        int pos = 0;
+        chars[pos++] = 0x68;
+        chars[pos++] = 0x01;
+        chars[pos++] = 0x00;
+        chars[pos++] = 0x00;
+        chars[pos++] = 0x00;
+        chars[pos++] = 0x00;
+        chars[pos++] = 0x00;
+        chars[pos++] = 0x68;
+        chars[pos++] = 0x81;
+        int num = 1 + data.num;
+        chars[pos++] = (char) (26 * num); //length
+
+        byte temp[] = writeLongData(data.address, 6);
+        System.arraycopy(temp, 0, chars, pos, 6);
+        pos += 6;
+
+        temp = writeLongData((long) (data.Ia * 1000), 4);
+        System.arraycopy(temp, 0, chars, pos, 4);
+        pos += 4;
+        temp = writeLongData((long) (data.Ib * 1000), 4);
+        System.arraycopy(temp, 0, chars, pos, 4);
+        pos += 4;
+        temp = writeLongData((long) (data.Ic * 1000), 4);
+        System.arraycopy(temp, 0, chars, pos, 4);
+        pos += 4;
+        temp = writeLongData((long) 0, 4);
+        System.arraycopy(temp, 0, chars, pos, 4);
+        pos += 4;
+        temp = writeLongData((long) 0, 4);
+        System.arraycopy(temp, 0, chars, pos, 4);
+        pos += 4;
+
+        for (int i = 0; i < data.num; i++) {
+            SwitchData switchData = data.sdata[i];
+            temp = writeLongData(switchData.address, 6);
+            System.arraycopy(temp, 0, chars, pos, 6);
+            pos += 6;
+
+            temp = writeLongData((long) (switchData.Ia * 1000), 4);
+            System.arraycopy(temp, 0, chars, pos, 4);
+            pos += 4;
+            temp = writeLongData((long) (switchData.Ib * 1000), 4);
+            System.arraycopy(temp, 0, chars, pos, 4);
+            pos += 4;
+            temp = writeLongData((long) (switchData.Ic * 1000), 4);
+            System.arraycopy(temp, 0, chars, pos, 4);
+            pos += 4;
+            temp = writeLongData((long) 0, 4);
+            System.arraycopy(temp, 0, chars, pos, 4);
+            pos += 4;
+            temp = writeLongData((long) 0, 4);
+            System.arraycopy(temp, 0, chars, pos, 4);
+            pos += 4;
+
+        }
+
+        int sum = 0;
+        for (int j = 0; j < pos; j++) {
+            sum += chars[j];
+        }
+        chars[pos++] = (char) (sum & 0xFF);
+
+        chars[pos++] = 0x16;
+
         System.out.println("\npos size : " + pos);
         for (int i = 10; i < 26 * num; i++) {
             if ((i - 10) % 26 == 0)
@@ -136,14 +229,14 @@ public class ServerRealDataHandler implements Runnable {
     }
 
 
-    public static char[] writeLongData(long val, int len) {
+    public static byte[] writeLongData(long val, int len) {
 
         int n = 0;
-        char[] chs = new char[len];
+        byte[] chs = new byte[len];
         long mark = 0x00FF;
 
         for (n = 0; n < len; n++) {
-            chs[n] = (char) (val >> (8 * n) & mark);
+            chs[n] = (byte) (val >> (8 * n) & mark);
             System.out.print(" " + Integer.toHexString((int) chs[n]));
 //            System.out.print(" "+Integer.toHexString((int) mark));
 
@@ -174,20 +267,23 @@ public class ServerRealDataHandler implements Runnable {
 
 //            System.out.println("reveive :" + clientInputStr);
 
-
+            OutputStream outputStream = socket.getOutputStream();
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 
+            while (true) {
+                byte sends[] = new byte[4096];
+                int num = createData(sends);
+                int i = 0;
+                outputStream.write(sends);
 
-            out.flush();
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                out.flush();
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-            out.writeUTF("finish");
-            out.flush();
-            out.close();
-            input.close();
+
         } catch (IOException e1) {
             e1.printStackTrace();
         } finally {

@@ -25,7 +25,7 @@ public class ServerMain {
             try {
                 Socket socket = serverSocket.accept();
                 System.out.println("accept... " +socket.getPort());
-                new Thread(new ServerHandler(socket)).start();
+                new Thread(new ServerRealDataHandler(socket)).start();
 
 
             } catch (IOException e) {
