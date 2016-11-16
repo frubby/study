@@ -21,10 +21,12 @@ public class ServerMain {
             e.printStackTrace();
             return;
         }
+
+        System.out.println("server start .");
         while (true) {
             try {
                 Socket socket = serverSocket.accept();
-                System.out.println("accept... " +socket.getPort());
+                System.out.println("accept from ... " +socket.getPort());
                 new Thread(new ServerRealDataHandler(socket)).start();
 
 

@@ -122,11 +122,11 @@ public class ServerRealDataHandler implements Runnable {
 
         chars[pos++] = 0x16;
 
-        System.out.println("\npos size : " + pos);
+        System.out.println("\nsend data size ok  : " + pos);
         for (int i = 10; i < 26 * num; i++) {
             if ((i - 10) % 26 == 0)
                 System.out.println("");
-            System.out.print(" " + Integer.toHexString((int) chars[i]));
+            System.out.print(" " + Integer.toHexString(chars[i] & 0xFF));
 
         }
 
@@ -142,7 +142,7 @@ public class ServerRealDataHandler implements Runnable {
 
         System.out.println(JSON.toJSONString(data, true));
 
-        char[] chars = new char[4096];
+        byte[] chars = new byte[4096];
 
         int pos = 0;
         chars[pos++] = 0x68;
@@ -153,9 +153,9 @@ public class ServerRealDataHandler implements Runnable {
         chars[pos++] = 0x00;
         chars[pos++] = 0x00;
         chars[pos++] = 0x68;
-        chars[pos++] = 0x81;
+        chars[pos++] = (byte) 0x81;
         int num = 1 + data.num;
-        chars[pos++] = (char) (26 * num); //length
+        chars[pos++] = (byte) (26 * num); //length
 
         byte temp[] = writeLongData(data.address, 6);
         System.arraycopy(temp, 0, chars, pos, 6);
@@ -205,7 +205,7 @@ public class ServerRealDataHandler implements Runnable {
         for (int j = 0; j < pos; j++) {
             sum += chars[j];
         }
-        chars[pos++] = (char) (sum & 0xFF);
+        chars[pos++] = (byte) (sum & 0xFF);
 
         chars[pos++] = 0x16;
 
@@ -213,7 +213,7 @@ public class ServerRealDataHandler implements Runnable {
         for (int i = 10; i < 26 * num; i++) {
             if ((i - 10) % 26 == 0)
                 System.out.println("");
-            System.out.print(" " + Integer.toHexString((int) chars[i]));
+            System.out.print(" " + Integer.toHexString(chars[i] & 0xff));
 
         }
 
@@ -236,8 +236,9 @@ public class ServerRealDataHandler implements Runnable {
         long mark = 0x00FF;
 
         for (n = 0; n < len; n++) {
+
             chs[n] = (byte) (val >> (8 * n) & mark);
-            System.out.print(" " + Integer.toHexString((int) chs[n]));
+            System.out.print(" " + Integer.toHexString(chs[n] & 0xff));
 //            System.out.print(" "+Integer.toHexString((int) mark));
 
         }
@@ -262,11 +263,6 @@ public class ServerRealDataHandler implements Runnable {
 
             generateData(data);
 
-            DataInputStream input = new DataInputStream(socket.getInputStream());
-//            String clientInputStr = input.readUTF();//这里要注意和客户端输出流的写方法对应,否则会抛 EOFException
-
-//            System.out.println("reveive :" + clientInputStr);
-
             OutputStream outputStream = socket.getOutputStream();
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 
@@ -274,11 +270,11 @@ public class ServerRealDataHandler implements Runnable {
                 byte sends[] = new byte[4096];
                 int num = createData(sends);
                 int i = 0;
-                outputStream.write(sends);
+                outputStream.write(sends,0,num);
 
                 out.flush();
                 try {
-                    Thread.sleep(1500);
+                    Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
