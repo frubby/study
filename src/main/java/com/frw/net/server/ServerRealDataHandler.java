@@ -45,6 +45,7 @@ public class ServerRealDataHandler implements Runnable {
             device.load = (random.nextInt(100) / 50.0f);
             device.num = (random.nextInt(20));
             device.switchState = "无效";
+            device.int_switchState = random.nextInt(5);
 
             device.loadType = "重要";
         }
@@ -104,12 +105,15 @@ public class ServerRealDataHandler implements Runnable {
             temp = writeLongData((long) (switchData.Ic * 1000), 4);
             System.arraycopy(temp, 0, chars, pos, 4);
             pos += 4;
-            temp = writeLongData((long) 0, 4);
+            temp = writeLongData(switchData.num, 4);
             System.arraycopy(temp, 0, chars, pos, 4);
             pos += 4;
-            temp = writeLongData((long) 0, 4);
-            System.arraycopy(temp, 0, chars, pos, 4);
-            pos += 4;
+            temp = writeLongData(switchData.int_switchState, 2);
+            System.arraycopy(temp, 0, chars, pos, 2);
+            pos += 2;
+            temp = writeLongData((long) 0, 2);
+            System.arraycopy(temp, 0, chars, pos, 2);
+            pos += 2;
 
         }
 
@@ -192,12 +196,15 @@ public class ServerRealDataHandler implements Runnable {
             temp = writeLongData((long) (switchData.Ic * 1000), 4);
             System.arraycopy(temp, 0, chars, pos, 4);
             pos += 4;
-            temp = writeLongData((long) 0, 4);
+            temp = writeLongData((long) switchData.num, 4);
             System.arraycopy(temp, 0, chars, pos, 4);
             pos += 4;
-            temp = writeLongData((long) 0, 4);
-            System.arraycopy(temp, 0, chars, pos, 4);
-            pos += 4;
+            temp = writeLongData(switchData.int_switchState, 2);
+            System.arraycopy(temp, 0, chars, pos, 2);
+            pos += 2;
+            temp = writeLongData((long) 0, 2);
+            System.arraycopy(temp, 0, chars, pos, 2);
+            pos += 2;
 
         }
 
@@ -270,7 +277,7 @@ public class ServerRealDataHandler implements Runnable {
                 byte sends[] = new byte[4096];
                 int num = createData(sends);
                 int i = 0;
-                outputStream.write(sends,0,num);
+                outputStream.write(sends, 0, num);
 
                 out.flush();
                 try {

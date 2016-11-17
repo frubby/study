@@ -11,4 +11,7 @@ public class SwitchData {
 	public int num;//开关动作次数
 	public String switchState;//开关状态
 	public String loadType;//负荷类型
+
+	public int int_switchState;//开关状态
+	public int int_loadType;//负荷类型
 }

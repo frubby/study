@@ -14,6 +14,9 @@ public class ServerMain {
 
 
     public static void main(String args[]) {
+        if (args.length == 1) {
+            port = Integer.parseInt(args[0]);
+        }
         ServerSocket serverSocket;
         try {
             serverSocket = new ServerSocket(port);
@@ -26,7 +29,7 @@ public class ServerMain {
         while (true) {
             try {
                 Socket socket = serverSocket.accept();
-                System.out.println("accept from ... " +socket.getPort());
+                System.out.println("accept from ... " + socket.getPort());
                 new Thread(new ServerRealDataHandler(socket)).start();
 
 
