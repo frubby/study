@@ -19,7 +19,7 @@ public class UserTest {
 
     @Autowired
     UserTestCtl userTestCtl;
-    @Test
+//    @Test
     public  void test(){
         UserDo userDo=new UserDo();
         userDo.setUid(1);
