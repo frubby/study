@@ -46,6 +46,7 @@ public class ServerRealDataHandler implements Runnable {
             device.num = (random.nextInt(20));
             device.switchState = "无效";
             device.int_switchState = random.nextInt(5);
+            device.int_loadType = random.nextInt(5);
 
             device.loadType = "重要";
         }
@@ -90,7 +91,11 @@ public class ServerRealDataHandler implements Runnable {
         System.arraycopy(temp, 0, chars, pos, 4);
         pos += 4;
 
+        Random rd=new Random();
         for (int i = 0; i < data.num; i++) {
+
+            if(rd.nextInt(100)>50)  // test 数据缺失
+                continue;
             SwitchData switchData = data.sdata[i];
             temp = writeLongData(switchData.address, 6);
             System.arraycopy(temp, 0, chars, pos, 6);
@@ -111,7 +116,7 @@ public class ServerRealDataHandler implements Runnable {
             temp = writeLongData(switchData.int_switchState, 2);
             System.arraycopy(temp, 0, chars, pos, 2);
             pos += 2;
-            temp = writeLongData((long) 0, 2);
+            temp = writeLongData(switchData.int_loadType, 2);
             System.arraycopy(temp, 0, chars, pos, 2);
             pos += 2;
 
@@ -281,7 +286,7 @@ public class ServerRealDataHandler implements Runnable {
 
                 out.flush();
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
