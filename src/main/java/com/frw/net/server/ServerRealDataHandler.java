@@ -20,7 +20,7 @@ public class ServerRealDataHandler implements Runnable {
 
 
     public static String strData = "{\"Ia\":0,\"Ib\":0,\"Ic\":0,\"address\":600000,\"imbalance\":0,\"name\":\"小区A\",\"num\":7," +
-            "\"sdata\":[{\"Ia\":0,\"Ib\":0,\"Ic\":0,\"address\":600001,\"load\":0,\"name\":\"开关B\",\"num\":0},{\"Ia\":0,\"Ib\":0,\"Ic\":0,\"address\":600002,\"load\":0,\"name\":\"开关C\",\"num\":0},{\"Ia\":0,\"Ib\":0,\"Ic\":0,\"address\":600003,\"load\":0,\"name\":\"开关D\",\"num\":0},{\"Ia\":0,\"Ib\":0,\"Ic\":0,\"address\":600004,\"load\":0,\"name\":\"开关E\",\"num\":0},{\"Ia\":0,\"Ib\":0,\"Ic\":0,\"address\":600005,\"load\":0,\"name\":\"开关F\",\"num\":0},{\"Ia\":0,\"Ib\":0,\"Ic\":0,\"address\":600006,\"load\":0,\"name\":\"开关G\",\"num\":0},{\"Ia\":0,\"Ib\":0,\"Ic\":0,\"address\":600007,\"load\":0,\"name\":\"开关H\",\"num\":0},null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]}\n";
+            "\"sdata\":[{\"Ia\":0,\"Ib\":0,\"Ic\":0,\"address\":600001,\"load\":0,\"name\":\"开关B\",\"num\":0},{\"Ia\":0,\"Ib\":0,\"Ic\":0,\"address\":600002,\"load\":0,\"name\":\"开关C\",\"num\":0},{\"Ia\":0,\"Ib\":0,\"Ic\":0,\"address\":600003,\"load\":0,\"name\":\"开关D\",\"num\":0},{\"Ia\":0,\"Ib\":0,\"Ic\":0,\"address\":600004,\"load\":0,\"name\":\"开关E\",\"num\":0},{\"Ia\":0,\"Ib\":0,\"Ic\":0,\"address\":600005,\"load\":0,\"name\":\"开关F\",\"num\":0},{\"Ia\":0,\"Ib\":0,\"Ic\":0,\"address\":600006,\"load\":0,\"name\":\"开关G\",\"num\":0},{\"Ia\":0,\"Ib\":0,\"Ic\":0,\"address\":600007,\"load\":0,\"name\":\"开关H\",\"num\":0}]}\n";
 
 
     public ServerRealDataHandler(Socket socket) {
@@ -34,9 +34,8 @@ public class ServerRealDataHandler implements Runnable {
         area.Ib = (random.nextInt(100) / 50.0f);
         area.Ic = (random.nextInt(100) / 50.0f);
         area.imbalance = (float) (random.nextInt(360));
-        SwitchData switchData[] = area.sdata;
-        for (int i = 0; i < area.num; i++) {
-            SwitchData device = area.sdata[i];
+        for (int i = 0; i < area.sdata.size(); i++) {
+            SwitchData device =area.sdata.get(i);
             device.Ia = (random.nextInt(100) / 50.0f);
             device.Ib = (random.nextInt(100) / 50.0f);
             device.Ic = (random.nextInt(100) / 50.0f);
@@ -68,8 +67,7 @@ public class ServerRealDataHandler implements Runnable {
         chars[pos++] = 0x00;
         chars[pos++] = 0x68;
         chars[pos++] = (byte) 0x81;
-        int num = 1 + data.num;
-        chars[pos++] = (byte) (26 * num); //length
+        int markSizePos=pos++;  //mark size pos
 
         byte temp[] = writeLongData(data.address, 6);
         System.arraycopy(temp, 0, chars, pos, 6);
@@ -92,11 +90,13 @@ public class ServerRealDataHandler implements Runnable {
         pos += 4;
 
         Random rd=new Random();
-        for (int i = 0; i < data.num; i++) {
+        int realNum=0;
+        for (int i = 0; i < data.sdata.size(); i++) {
 
             if(rd.nextInt(100)>50)  // test 数据缺失
                 continue;
-            SwitchData switchData = data.sdata[i];
+            realNum++;
+            SwitchData switchData = data.sdata.get(i);
             temp = writeLongData(switchData.address, 6);
             System.arraycopy(temp, 0, chars, pos, 6);
             pos += 6;
@@ -122,6 +122,7 @@ public class ServerRealDataHandler implements Runnable {
 
         }
 
+        chars[markSizePos] = (byte) (26 * (realNum+1)) ; //length
 
         int sum = 0;
         for (int j = 0; j < pos; j++) {
@@ -132,7 +133,11 @@ public class ServerRealDataHandler implements Runnable {
         chars[pos++] = 0x16;
 
         System.out.println("\nsend data size ok  : " + pos);
-        for (int i = 10; i < 26 * num; i++) {
+        for (int i = 0; i < 10; i++) {
+            System.out.print(" " + Integer.toHexString(chars[i] & 0xFF));
+
+        }
+        for (int i = 10; i < 26 * (realNum+1); i++) {
             if ((i - 10) % 26 == 0)
                 System.out.println("");
             System.out.print(" " + Integer.toHexString(chars[i] & 0xFF));
@@ -144,101 +149,101 @@ public class ServerRealDataHandler implements Runnable {
     }
 
 
-    public static void main(String args[]) {
-        Data data = JSON.parseObject(strData, Data.class);
-
-        generateData(data);
-
-        System.out.println(JSON.toJSONString(data, true));
-
-        byte[] chars = new byte[4096];
-
-        int pos = 0;
-        chars[pos++] = 0x68;
-        chars[pos++] = 0x01;
-        chars[pos++] = 0x00;
-        chars[pos++] = 0x00;
-        chars[pos++] = 0x00;
-        chars[pos++] = 0x00;
-        chars[pos++] = 0x00;
-        chars[pos++] = 0x68;
-        chars[pos++] = (byte) 0x81;
-        int num = 1 + data.num;
-        chars[pos++] = (byte) (26 * num); //length
-
-        byte temp[] = writeLongData(data.address, 6);
-        System.arraycopy(temp, 0, chars, pos, 6);
-        pos += 6;
-
-        temp = writeLongData((long) (data.Ia * 1000), 4);
-        System.arraycopy(temp, 0, chars, pos, 4);
-        pos += 4;
-        temp = writeLongData((long) (data.Ib * 1000), 4);
-        System.arraycopy(temp, 0, chars, pos, 4);
-        pos += 4;
-        temp = writeLongData((long) (data.Ic * 1000), 4);
-        System.arraycopy(temp, 0, chars, pos, 4);
-        pos += 4;
-        temp = writeLongData((long) 0, 4);
-        System.arraycopy(temp, 0, chars, pos, 4);
-        pos += 4;
-        temp = writeLongData((long) 0, 4);
-        System.arraycopy(temp, 0, chars, pos, 4);
-        pos += 4;
-
-        for (int i = 0; i < data.num; i++) {
-            SwitchData switchData = data.sdata[i];
-            temp = writeLongData(switchData.address, 6);
-            System.arraycopy(temp, 0, chars, pos, 6);
-            pos += 6;
-
-            temp = writeLongData((long) (switchData.Ia * 1000), 4);
-            System.arraycopy(temp, 0, chars, pos, 4);
-            pos += 4;
-            temp = writeLongData((long) (switchData.Ib * 1000), 4);
-            System.arraycopy(temp, 0, chars, pos, 4);
-            pos += 4;
-            temp = writeLongData((long) (switchData.Ic * 1000), 4);
-            System.arraycopy(temp, 0, chars, pos, 4);
-            pos += 4;
-            temp = writeLongData((long) switchData.num, 4);
-            System.arraycopy(temp, 0, chars, pos, 4);
-            pos += 4;
-            temp = writeLongData(switchData.int_switchState, 2);
-            System.arraycopy(temp, 0, chars, pos, 2);
-            pos += 2;
-            temp = writeLongData((long) 0, 2);
-            System.arraycopy(temp, 0, chars, pos, 2);
-            pos += 2;
-
-        }
-
-        int sum = 0;
-        for (int j = 0; j < pos; j++) {
-            sum += chars[j];
-        }
-        chars[pos++] = (byte) (sum & 0xFF);
-
-        chars[pos++] = 0x16;
-
-        System.out.println("\npos size : " + pos);
-        for (int i = 10; i < 26 * num; i++) {
-            if ((i - 10) % 26 == 0)
-                System.out.println("");
-            System.out.print(" " + Integer.toHexString(chars[i] & 0xff));
-
-        }
-
-
-//        char ch = 0x01;
+//    public static void main(String args[]) {
+//        Data data = JSON.parseObject(strData, Data.class);
 //
-//        char test1[] = {0x01, 0x02, 0x00, 0x00};
-//        System.out.print(getLongData(4, test1));
+//        generateData(data);
 //
-        System.out.println("\n write test");
+//        System.out.println(JSON.toJSONString(data, true));
 //
-        writeLongData(600001, 6);
-    }
+//        byte[] chars = new byte[4096];
+//
+//        int pos = 0;
+//        chars[pos++] = 0x68;
+//        chars[pos++] = 0x01;
+//        chars[pos++] = 0x00;
+//        chars[pos++] = 0x00;
+//        chars[pos++] = 0x00;
+//        chars[pos++] = 0x00;
+//        chars[pos++] = 0x00;
+//        chars[pos++] = 0x68;
+//        chars[pos++] = (byte) 0x81;
+//        int num = 1 + data.num;
+//        chars[pos++] = (byte) (26 * num); //length
+//
+//        byte temp[] = writeLongData(data.address, 6);
+//        System.arraycopy(temp, 0, chars, pos, 6);
+//        pos += 6;
+//
+//        temp = writeLongData((long) (data.Ia * 1000), 4);
+//        System.arraycopy(temp, 0, chars, pos, 4);
+//        pos += 4;
+//        temp = writeLongData((long) (data.Ib * 1000), 4);
+//        System.arraycopy(temp, 0, chars, pos, 4);
+//        pos += 4;
+//        temp = writeLongData((long) (data.Ic * 1000), 4);
+//        System.arraycopy(temp, 0, chars, pos, 4);
+//        pos += 4;
+//        temp = writeLongData((long) 0, 4);
+//        System.arraycopy(temp, 0, chars, pos, 4);
+//        pos += 4;
+//        temp = writeLongData((long) 0, 4);
+//        System.arraycopy(temp, 0, chars, pos, 4);
+//        pos += 4;
+//
+//        for (int i = 0; i < data.num; i++) {
+//            SwitchData switchData = data.sdata[i];
+//            temp = writeLongData(switchData.address, 6);
+//            System.arraycopy(temp, 0, chars, pos, 6);
+//            pos += 6;
+//
+//            temp = writeLongData((long) (switchData.Ia * 1000), 4);
+//            System.arraycopy(temp, 0, chars, pos, 4);
+//            pos += 4;
+//            temp = writeLongData((long) (switchData.Ib * 1000), 4);
+//            System.arraycopy(temp, 0, chars, pos, 4);
+//            pos += 4;
+//            temp = writeLongData((long) (switchData.Ic * 1000), 4);
+//            System.arraycopy(temp, 0, chars, pos, 4);
+//            pos += 4;
+//            temp = writeLongData((long) switchData.num, 4);
+//            System.arraycopy(temp, 0, chars, pos, 4);
+//            pos += 4;
+//            temp = writeLongData(switchData.int_switchState, 2);
+//            System.arraycopy(temp, 0, chars, pos, 2);
+//            pos += 2;
+//            temp = writeLongData((long) 0, 2);
+//            System.arraycopy(temp, 0, chars, pos, 2);
+//            pos += 2;
+//
+//        }
+//
+//        int sum = 0;
+//        for (int j = 0; j < pos; j++) {
+//            sum += chars[j];
+//        }
+//        chars[pos++] = (byte) (sum & 0xFF);
+//
+//        chars[pos++] = 0x16;
+//
+//        System.out.println("\npos size : " + pos);
+//        for (int i = 10; i < 26 * num; i++) {
+//            if ((i - 10) % 26 == 0)
+//                System.out.println("");
+//            System.out.print(" " + Integer.toHexString(chars[i] & 0xff));
+//
+//        }
+//
+//
+////        char ch = 0x01;
+////
+////        char test1[] = {0x01, 0x02, 0x00, 0x00};
+////        System.out.print(getLongData(4, test1));
+////
+//        System.out.println("\n write test");
+////
+//        writeLongData(600001, 6);
+//    }
 
 
     public static byte[] writeLongData(long val, int len) {
@@ -286,7 +291,7 @@ public class ServerRealDataHandler implements Runnable {
 
                 out.flush();
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
